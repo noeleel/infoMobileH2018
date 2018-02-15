@@ -6,6 +6,14 @@
     android:layout_height="match_parent"
     tools:context="com.example.lab1inf8405.MainActivity">
 
+    <Button
+        android:id="@+id/buttonShareTextUrl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:text="Share Text or URL" />
+
     <ImageView
         android:id="@+id/imageView1"
         android:layout_width="wrap_content"

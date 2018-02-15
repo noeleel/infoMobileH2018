@@ -16,9 +16,34 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        this.button_scan=(Button)findViewById(R.id.button1);
+        this.button_scan = (Button) findViewById(R.id.button1);
         this.button_scan.setOnClickListener(this);
+        View.OnClickListener handler = new View.OnClickListener() {
+            public void onClick (View v) {
+                switch (v.getId()) {
+
+                    case R.id.buttonShareTextUrl:
+                        shareTextUrl();
+                        break;
+                }
+            }
+        };
+        findViewById(R.id.buttonShareTextUrl).setOnClickListener(handler);
     }
+
+    private void shareTextUrl() {
+        Intent share = new Intent(android.content.Intent.ACTION_SEND);
+        share.setType("text/plain");
+        share.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+
+        // Add data to the intent, the receiving app will decide
+        // what to do with it.
+        share.putExtra(Intent.EXTRA_SUBJECT, "Partage de reseaux wifi");
+        share.putExtra(Intent.EXTRA_TEXT, "Partage BSSID, SSID, Securite Authentification");
+
+        startActivity(Intent.createChooser(share, "Share link!"));
+        }
+
 
     @Override
     public void onClick(View view) {
