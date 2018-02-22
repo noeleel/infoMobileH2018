@@ -2,6 +2,7 @@ package com.example.lab1inf8405;
 /**
  * Created by Melchor on 2018-02-04.
  */
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View.OnClickListener;
@@ -10,20 +11,23 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity implements OnClickListener{
-    private Button button_scan;
+public class MainActivity extends Activity implements OnClickListener{
+    private Button button_wifi;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        this.button_scan = (Button) findViewById(R.id.button1);
-        this.button_scan.setOnClickListener(this);
+
+        Intent intent = getIntent();
+
+        this.button_wifi = (Button) findViewById(R.id.button1);
+        this.button_wifi.setOnClickListener(this);
         View.OnClickListener handler = new View.OnClickListener() {
             public void onClick (View v) {
                 switch (v.getId()) {
 
                     case R.id.buttonShareTextUrl:
-                        shareTextUrl();
+                        //shareTextUrl();
                         break;
                 }
             }
@@ -31,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
         findViewById(R.id.buttonShareTextUrl).setOnClickListener(handler);
     }
 
+    /*
     private void shareTextUrl() {
         Intent share = new Intent(android.content.Intent.ACTION_SEND);
         share.setType("text/plain");
@@ -42,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
         share.putExtra(Intent.EXTRA_TEXT, "Partage BSSID, SSID, Securite Authentification");
 
         startActivity(Intent.createChooser(share, "Share link!"));
-        }
+    } */
 
 
     @Override

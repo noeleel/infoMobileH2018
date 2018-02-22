@@ -40,9 +40,9 @@ public class Wifilist extends Activity {
         for (int i = 0; i < wifiList.size (); i++) {
             String item = wifiList.get (i).toString ();
             String[] vector_item = item.split (",");
-            String item_essid = vector_item[0];
-            String item_capabilities = vector_item[2];
-            String ssid = item_essid.split (":")[1];
+            String item_essid = wifiList.get(i).BSSID;
+            String item_capabilities = wifiList.get(i).capabilities;
+            String ssid = wifiList.get(i).SSID;
             String security = item_capabilities.split (":")[1];
             nets[i] = new Element (ssid, security);
 

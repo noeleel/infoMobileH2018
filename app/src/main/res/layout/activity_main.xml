@@ -25,13 +25,12 @@
         android:id="@+id/linearLayout1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginStart="4dp"
         android:gravity="center">
 
 
         <TextView
             android:id="@+id/textView1"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="rechercher WIFI"
             android:textAppearance="?android:attr/textAppearanceLarge" />
@@ -39,11 +38,10 @@
         <Button
             android:id="@+id/button1"
             android:layout_width="wrap_content"
-            android:contextClickable="true"
             android:layout_height="wrap_content"
+            android:contextClickable="true"
             android:text="OK"
-            android:textSize="25dp"
-            />
+            android:textSize="25dp" />
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>
