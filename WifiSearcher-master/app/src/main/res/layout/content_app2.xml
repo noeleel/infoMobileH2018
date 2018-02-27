@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.wifisearcher.WifiScannerActivity"
+    tools:showIn="@layout/activity_app2">
+
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/ScrollView01"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+
+    <TableLayout android:layout_width="fill_parent" android:layout_height="wrap_content" android:stretchColumns="1" android:padding="5dip">
+        <TableRow android:background="#f1f1f1">
+            <TextView android:text="Number of Access Points" android:padding="2dip"/>
+            <TextView android:id="@+id/nhotspots" android:text="NA" android:gravity="right" android:padding="2dip"/>
+        </TableRow>
+        <TextView android:textSize="12sp" android:background="#d7bbbb" android:id="@+id/hotspotslist" android:padding="2dip"/>
+    </TableLayout>
+    </ScrollView>
+</android.support.constraint.ConstraintLayout>
