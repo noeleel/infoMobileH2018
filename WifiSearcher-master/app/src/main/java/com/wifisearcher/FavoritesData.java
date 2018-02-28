@@ -11,6 +11,14 @@ public class FavoritesData {
     private static final FavoritesData favoritesData = new FavoritesData();
     public static FavoritesData getInstance() {return favoritesData;}
 
+    public String getElementByIndex(int index) {
+        return favoritesBSSID.get(index);
+    }
+
+    public int getNbFavorites() {
+        return favoritesBSSID.size();
+    }
+
     public void addElement(String BSSID) {
         favoritesBSSID.add(BSSID);
     }
