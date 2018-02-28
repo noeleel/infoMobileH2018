@@ -195,6 +195,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
 
                 public boolean onMarkerClick(Marker marker) {
+
+                    // Start an intent to navActivity
                     StringBuilder sb = new StringBuilder();
                     final Context context = getApplicationContext();
                     Intent intent = new Intent(context, NavActivity.class);
@@ -206,13 +208,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     if (wifiList.get(finalI).capabilities.length()==0)
                         sb.append("[NONE]");
                     else sb.append(wifiList.get(finalI).capabilities).append("\n");
-                    intent.putExtra("WifiIntent",sb.toString());
 
-                    // Test AP
+
+                    // Add parameters to intent
                     intent.putExtra("pointSSID", wifiList.get(finalI).SSID);
                     intent.putExtra("pointBSSID", wifiList.get(finalI).BSSID);
-                    intent.putExtra("pointRSSI", wifiList.get(finalI).level);
+                    intent.putExtra("pointRSSI", "" + wifiList.get(finalI).level);
                     intent.putExtra("pointCapabilities", wifiList.get(finalI).capabilities);
+                    intent.putExtra("internalID", Integer.toString(finalI + 1));
+
+                    intent.putExtra("WifiIntent",sb.toString());
 
                     double a = 0.005;
                     int n = 0;

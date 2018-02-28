@@ -16,14 +16,13 @@ import java.util.Locale;
 
 public class NavActivity extends AppCompatActivity {
 
-    private TextView mTextMessage;
     private String WifiKey;
 
+    private String pointTitle;
     private String pointSSID;
     private String pointBSSID;
     private String pointRSSI;
     private String pointCapabilities;
-
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -68,20 +67,31 @@ public class NavActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nav);
 
-        Intent myIntent = getIntent();
+        // Get All necessary UI Textview
+        TextView pointTitleTV = (TextView) findViewById(R.id.network);
+        TextView pointSSIDTV = (TextView) findViewById(R.id.SSID_content);
+        TextView pointBSSIDTV = (TextView) findViewById(R.id.BSSID_content);
+        TextView pointRSSITV = (TextView) findViewById(R.id.RSSI_content);
+        TextView pointCapabilitiesTV = (TextView) findViewById(R.id.capabilities_content);
+        TextView batteryUsageTV = (TextView) findViewById(R.id.battery_usage);
 
-        WifiKey = myIntent.getStringExtra("WifiIntent");
-        TextView Wifiinfo = (TextView)findViewById(R.id.wifi_info);
+        //TextView Wifiinfo = (TextView)findViewById(R.id.wifi_info);
+
+        // Get data from the intent
+        Intent myIntent = getIntent();
 
         pointSSID = myIntent.getStringExtra("pointSSID");
         pointBSSID = myIntent.getStringExtra("pointBSSID");
         pointRSSI = myIntent.getStringExtra("pointRSSI");
         pointCapabilities = myIntent.getStringExtra("pointCapabilities");
+        pointTitle = "Réseau No." + myIntent.getStringExtra("internalID");
 
+        WifiKey = myIntent.getStringExtra("WifiIntent");
 
         IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
         Intent batteryStatus = registerReceiver(null, ifilter);
 
+        // Compute battery utilisation percent
         int level = batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
         int scale = batteryStatus.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
 
@@ -90,12 +100,20 @@ public class NavActivity extends AppCompatActivity {
         float currentbatterielevel =  (batteryPct*100);
         float pastbatterielevel = Float.parseFloat(myIntent.getStringExtra("PastBatterieLevel"));
 
-        String Batterie_info = "\nNiveau de la batterie au commencement de l'application : "
+        String Batterie_info = "Niveau de la batterie au commencement de l'application : "
                 + Float.toString(pastbatterielevel) + "%"
-                + "\n \n Niveau de la batterie apres lancement de l'application : "
+                + "\n\nNiveau de la batterie apres lancement de l'application : "
                 + Float.toString(currentbatterielevel) + "%"
-                + "\n \n \n L'application a utilisé " + Float.toString(currentbatterielevel - pastbatterielevel) + " % de votre batterie.";
-        Wifiinfo.setText(WifiKey + Batterie_info);
+                + "\n\nL'application a utilisée " + Float.toString(currentbatterielevel - pastbatterielevel) + " % de votre batterie.";
+
+        // Update UI
+        pointTitleTV.setText(pointTitle);
+        pointSSIDTV.setText(pointSSID);
+        pointBSSIDTV.setText(pointBSSID);
+        pointRSSITV.setText(pointRSSI);
+        pointCapabilitiesTV.setText(pointCapabilities);
+        batteryUsageTV.setText(Batterie_info);
+       // Wifiinfo.setText(WifiKey + Batterie_info);
 
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
@@ -103,8 +121,6 @@ public class NavActivity extends AppCompatActivity {
     }
 
     private void handleFavoriteButton() {
-
-
         if (FavoritesData.getInstance().checkIfInFavorites(pointBSSID)) {
             FavoritesData.getInstance().deleteElement(pointBSSID);
             Toast.makeText(getApplicationContext(), "Supprimé des favoris", Toast.LENGTH_LONG).show();
