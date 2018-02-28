@@ -30,6 +30,8 @@ public class NavActivity extends AppCompatActivity {
     private String pointRSSI;
     private String pointCapabilities;
 
+    private Toast favoritesUpdateMessage;
+
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -127,20 +129,26 @@ public class NavActivity extends AppCompatActivity {
         pointCapabilitiesTV.setText(pointCapabilities);
         batteryUsageTV.setText(Batterie_info);
        // Wifiinfo.setText(WifiKey + Batterie_info);
-
-
+        
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
 
     private void handleFavoriteButton() {
+        // Delete previous toast if needed
+        if(favoritesUpdateMessage != null)
+            favoritesUpdateMessage.cancel();
+
+        // Add or delete from favorites
         if (FavoritesData.getInstance().checkIfInFavorites(pointBSSID)) {
             FavoritesData.getInstance().deleteElement(pointBSSID);
-            Toast.makeText(getApplicationContext(), "Supprimé des favoris", Toast.LENGTH_LONG).show();
+            favoritesUpdateMessage = Toast.makeText(getApplicationContext(), "Supprimé des favoris", Toast.LENGTH_LONG);
         } else {
             FavoritesData.getInstance().addElement(pointBSSID);
-            Toast.makeText(getApplicationContext(), "Ajouté aux favoris", Toast.LENGTH_LONG).show();
+            favoritesUpdateMessage = Toast.makeText(getApplicationContext(), "Ajouté aux favoris", Toast.LENGTH_LONG);
         }
+
+        favoritesUpdateMessage.show();
     }
 
 }
