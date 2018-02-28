@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
 public class WifiScannerActivity extends AppCompatActivity {
     List<ScanResult> wifiList;
     StringBuilder sb = new StringBuilder();
@@ -42,6 +43,7 @@ public class WifiScannerActivity extends AppCompatActivity {
             }
         });*/
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //appel au methode getWifiListNearby
         getWifiListNearby(this.getApplicationContext());
     }
 
@@ -56,6 +58,7 @@ public class WifiScannerActivity extends AppCompatActivity {
         return null;
     }
 
+    //configurer la liste des réseaux WiFi
     public void getWifiListNearby ( Context context ) {
         WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
         wifiManager.startScan();
