@@ -8,6 +8,7 @@ import java.util.Vector;
 
 public class FavoritesData {
 
+    // Singleton instance
     private static final FavoritesData favoritesData = new FavoritesData();
     public static FavoritesData getInstance() {return favoritesData;}
 
@@ -31,5 +32,6 @@ public class FavoritesData {
         return  favoritesBSSID.contains(BSSID);
     }
 
+    // List of all favorites addresses BSSID
     private Vector<String> favoritesBSSID = new Vector<String>();
 }

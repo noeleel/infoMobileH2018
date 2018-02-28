@@ -26,10 +26,9 @@ public class FavoritesActivity extends AppCompatActivity {
         // Allow to return to main activity
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        // Add all favorites to the view
         favoritesListView = (ListView) findViewById(R.id.favorites_list_view);
-
         Vector<String>  favoritesList = loadFavoritesList();
-
         ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, favoritesList);
         favoritesListView.setAdapter(adapter);
     }
