@@ -189,14 +189,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             if(n>5) a = -0.005;
             nLatitude[0] = new Random().nextDouble()*a;
             nLongitude[0] = new Random().nextDouble()*a;;
-            if (!(wifiList.get(i).capabilities.contains("ESS"))&!(wifiList.get(i).capabilities.contains("WPA2"))&!(wifiList.get(i).capabilities.contains("WPA"))&!(wifiList.get(i).capabilities.contains("WEP"))&!(wifiList.get(i).capabilities.contains("PSK"))&!(wifiList.get(i).capabilities.contains("EAP"))){
+            if (!(wifiList.get(i).capabilities.contains("WPA2"))&!(wifiList.get(i).capabilities.contains("WPA"))&!(wifiList.get(i).capabilities.contains("WEP"))&!(wifiList.get(i).capabilities.contains("PSK"))&!(wifiList.get(i).capabilities.contains("EAP"))){
                 // Permet la modification de la couleur du marqueur
                 // Vert pour les reseaux wifi gratuits
                 bitmapDescriptor
                         = BitmapDescriptorFactory.defaultMarker(
                         BitmapDescriptorFactory.HUE_GREEN);
             } else {
-                // Rouge pour les reseaux wiif payant
+                // Rouge pour les reseaux wifi payant
                 bitmapDescriptor
                         = BitmapDescriptorFactory.defaultMarker(
                         BitmapDescriptorFactory.HUE_RED);
