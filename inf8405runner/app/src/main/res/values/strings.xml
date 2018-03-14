@@ -6,4 +6,7 @@
 
     <string name="action_settings">Settings</string>
     <string name="title_activity_maps">Map</string>
+    <string name="title_activity_progression">ProgressionActivity</string>
+    <string name="title_activity_performance">PerformanceActivity</string>
+    <string name="title_activity_battery">BatteryActivity</string>
 </resources>
