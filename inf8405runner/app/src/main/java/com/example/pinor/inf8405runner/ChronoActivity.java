@@ -88,10 +88,12 @@ public class ChronoActivity extends AppCompatActivity
         } else if (id == R.id.nav_map) {
             Intent intent = new Intent(this, MapsActivity.class);
             startActivity(intent);
-        /*} else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {*/
-
+        } else if (id == R.id.nav_performance) {
+            Intent intent = new Intent(this, PerformanceActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.nav_progression) {
+            Intent intent = new Intent(this, ProgressionActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {

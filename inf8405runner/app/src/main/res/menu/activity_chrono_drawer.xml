@@ -7,11 +7,19 @@
         <item
             android:id="@+id/nav_chrono"
             android:icon="@drawable/ic_menu_camera"
-            android:title="Chrono Activity" />
+            android:title="Chronomètre" />
         <item
             android:id="@+id/nav_map"
             android:icon="@drawable/ic_menu_gallery"
-            android:title="Map Activity" />
+            android:title="Cartes" />
+        <item
+            android:id="@+id/nav_performance"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="Performance" />
+        <item
+            android:id="@+id/nav_progression"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="Progression" />
         <!--item
             android:id="@+id/nav_slideshow"
             android:icon="@drawable/ic_menu_slideshow"
