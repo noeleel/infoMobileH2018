@@ -1,9 +1,12 @@
 package com.example.pinor.inf8405runner;
 
-import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -14,13 +17,18 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class ChronoActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class DrawerActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener,
+        PerformanceFragment.OnFragmentInteractionListener,
+        ProgressionFragment.OnFragmentInteractionListener,
+        ChronoFragment.OnFragmentInteractionListener,
+        MapFragment.OnFragmentInteractionListener,
+        BatteryFragment.OnFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chrono);
+        setContentView(R.layout.activity_drawer);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -56,7 +64,7 @@ public class ChronoActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.chrono, menu);
+        getMenuInflater().inflate(R.menu.drawer, menu);
         return true;
     }
 
@@ -81,27 +89,32 @@ public class ChronoActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_chrono) {
-            // Handle the camera action
-            Intent intent = new Intent(this, ChronoActivity.class);
-            startActivity(intent);
-        } else if (id == R.id.nav_map) {
-            Intent intent = new Intent(this, MapsActivity.class);
-            startActivity(intent);
-        } else if (id == R.id.nav_performance) {
-            Intent intent = new Intent(this, PerformanceActivity.class);
-            startActivity(intent);
-        } else if (id == R.id.nav_progression) {
-            Intent intent = new Intent(this, ProgressionActivity.class);
-            startActivity(intent);
-        } else if (id == R.id.nav_share) {
+        Fragment fragment = null;
 
-        } else if (id == R.id.nav_send) {
+        if (id == R.id.performance_frag) {
+            fragment = new PerformanceFragment();
+        } else if (id == R.id.progression_frag) {
+            fragment = new ProgressionFragment();
+        } else if (id == R.id.map_frag) {
+            fragment = new MapFragment();
+        } else if (id == R.id.chrono_frag) {
+            fragment = new ChronoFragment();
+        } else if (id == R.id.battery_frag) {
+            fragment = new BatteryFragment();
+        }
 
+        if (fragment != null) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction ft = fragmentManager.beginTransaction();
+            ft.replace(R.id.drawer_content, fragment);
+            ft.commit();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    @Override
+    public void onFragmentInteraction(Uri uri){}
 }
