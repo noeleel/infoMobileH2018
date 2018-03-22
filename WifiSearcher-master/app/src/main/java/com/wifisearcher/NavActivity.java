@@ -129,7 +129,7 @@ public class NavActivity extends AppCompatActivity {
         pointCapabilitiesTV.setText(pointCapabilities);
         batteryUsageTV.setText(Batterie_info);
        // Wifiinfo.setText(WifiKey + Batterie_info);
-        
+
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }

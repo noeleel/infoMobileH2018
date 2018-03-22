@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/performance_frag"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="Performance" />
+        <item
+            android:id="@+id/progression_frag"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="Progression" />
+        <item
+            android:id="@+id/map_frag"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="Maps" />
+        <item
+            android:id="@+id/chrono_frag"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Chronomètre" />
+    </group>
+
+    <item android:title="Paramètres">
+        <menu>
+            <item
+                android:id="@+id/battery_frag"
+                android:icon="@drawable/ic_menu_share"
+                android:title="Batterie" />
+
+        </menu>
+    </item>
+
+</menu>
