@@ -99,8 +99,6 @@ public class DrawerActivity extends AppCompatActivity
             fragment = new MapFragment();
         } else if (id == R.id.chrono_frag) {
             fragment = new ChronoFragment();
-            new intent
-                    intent.putExtra()
         } else if (id == R.id.battery_frag) {
             fragment = new BatteryFragment();
         }
