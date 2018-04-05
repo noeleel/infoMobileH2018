@@ -20,7 +20,7 @@
 
         <TableLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:stretchColumns="1">
 
             <TableRow
@@ -137,10 +137,14 @@
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Performance"/>
+            android:layout_height="wrap_content"
+            android:text="Calories brulées"
+            android:textSize="18sp" />
 
-
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="result"/>
 
     </LinearLayout>
 
