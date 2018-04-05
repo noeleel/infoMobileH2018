@@ -14,6 +14,12 @@ import android.widget.Toast;
 
 import java.util.Locale;
 
+    /*
+
+    La classe NavActivity permet l'affichage des informations relatives au reseau wifi
+    selectionne lorsque l'utilisateur choisit un des marqueurs sur la carte Google Maps.
+
+     */
 public class NavActivity extends AppCompatActivity {
 
     private String WifiKey;
@@ -24,11 +30,21 @@ public class NavActivity extends AppCompatActivity {
     private String pointRSSI;
     private String pointCapabilities;
 
+    private Toast favoritesUpdateMessage;
+
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
         @Override
         public boolean onNavigationItemSelected (@NonNull MenuItem item) {
+            // Generation automatique de l'activite NavActivity par Android Studio
+            /*
+                Cette activite possede trois boutons:
+                    Le bouton share permettant de partager les informations du reseau wifi à d'autres applications
+                    Le bouton favori permettant d'ajouter le BSSID de ce reseau dans la liste des reseaux favoris
+                    Le bouton directions permettant a l'utilisateur de savoir comment acceder a ce reseau wifi
+                    (redirection vers l'application Google Maps)
+             */
             switch (item.getItemId()) {
                 case R.id.navigation_share:
                     Intent share = new Intent(android.content.Intent.ACTION_SEND);
@@ -75,9 +91,7 @@ public class NavActivity extends AppCompatActivity {
         TextView pointCapabilitiesTV = (TextView) findViewById(R.id.capabilities_content);
         TextView batteryUsageTV = (TextView) findViewById(R.id.battery_usage);
 
-        //TextView Wifiinfo = (TextView)findViewById(R.id.wifi_info);
-
-        // Get data from the intent
+        //  Recuperation des arguments de l'Intent
         Intent myIntent = getIntent();
 
         pointSSID = myIntent.getStringExtra("pointSSID");
@@ -106,7 +120,8 @@ public class NavActivity extends AppCompatActivity {
                 + Float.toString(currentbatterielevel) + "%"
                 + "\n\nL'application a utilisée " + Float.toString(currentbatterielevel - pastbatterielevel) + " % de votre batterie.";
 
-        // Update UI
+        // Affichage des informations du reseau Wifi et du pourcentage de batterie consomme
+        // pour le scan des reseaux wifi
         pointTitleTV.setText(pointTitle);
         pointSSIDTV.setText(pointSSID);
         pointBSSIDTV.setText(pointBSSID);
@@ -115,19 +130,25 @@ public class NavActivity extends AppCompatActivity {
         batteryUsageTV.setText(Batterie_info);
        // Wifiinfo.setText(WifiKey + Batterie_info);
 
-
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
 
     private void handleFavoriteButton() {
+        // Delete previous toast if needed
+        if(favoritesUpdateMessage != null)
+            favoritesUpdateMessage.cancel();
+
+        // Add or delete from favorites
         if (FavoritesData.getInstance().checkIfInFavorites(pointBSSID)) {
             FavoritesData.getInstance().deleteElement(pointBSSID);
-            Toast.makeText(getApplicationContext(), "Supprimé des favoris", Toast.LENGTH_LONG).show();
+            favoritesUpdateMessage = Toast.makeText(getApplicationContext(), "Supprimé des favoris", Toast.LENGTH_LONG);
         } else {
             FavoritesData.getInstance().addElement(pointBSSID);
-            Toast.makeText(getApplicationContext(), "Ajouté aux favoris", Toast.LENGTH_LONG).show();
+            favoritesUpdateMessage = Toast.makeText(getApplicationContext(), "Ajouté aux favoris", Toast.LENGTH_LONG);
         }
+
+        favoritesUpdateMessage.show();
     }
 
 }

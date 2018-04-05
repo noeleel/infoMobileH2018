@@ -34,14 +34,14 @@ public class WifiScannerActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick (View view) {
                 Snackbar.make(view, "Share", Snackbar.LENGTH_LONG)
                         .setAction("Sharing the Wifi results", Share()).show();
             }
-        });*/
+        });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         //appel au methode getWifiListNearby
         getWifiListNearby(this.getApplicationContext());
