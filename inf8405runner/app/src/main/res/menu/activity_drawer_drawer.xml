@@ -5,6 +5,10 @@
 
     <group android:checkableBehavior="single">
         <item
+            android:id="@+id/chrono_frag"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Chronomètre" />
+        <item
             android:id="@+id/performance_frag"
             android:icon="@drawable/ic_menu_camera"
             android:title="Performance" />
@@ -16,10 +20,6 @@
             android:id="@+id/map_frag"
             android:icon="@drawable/ic_menu_slideshow"
             android:title="Maps" />
-        <item
-            android:id="@+id/chrono_frag"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Chronomètre" />
     </group>
 
     <item android:title="Paramètres">
