@@ -13,15 +13,20 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.pinor.inf8405runner.db.DBHandler;
+import com.example.pinor.inf8405runner.db.Result;
+
 import java.util.Timer;
 
 public class ChronoFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
+    private DBHandler db;
+
+    private TextView chronoText;
     private Button startButton;
     private Button stopButton;
-
 
     private long startTime = 0L;
     private long pauseTime = 0L;
@@ -31,8 +36,6 @@ public class ChronoFragment extends Fragment {
 
     private boolean onPause = false;
     private boolean onStop = true;
-
-    private TextView chronoText;
 
     private Handler customHandler = new Handler();
 
@@ -50,6 +53,7 @@ public class ChronoFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        db = new DBHandler(getActivity());
     }
 
     @Override
@@ -87,7 +91,7 @@ public class ChronoFragment extends Fragment {
                 onPause = false;
                 onStop = true;
                 Log.d("Chrono", "Stopped");
-                updateDB();
+                insertTimeDB();
                 reinitializeTimer();
                 customHandler.postDelayed(updateTimerThread, 0);
             }
@@ -96,8 +100,13 @@ public class ChronoFragment extends Fragment {
         return RootView;
     }
 
-    public void updateDB() {
-
+    public void insertTimeDB() {
+        long time = stopTime - startTime - pauseDelay;
+        Result result = new Result();
+        result.set_distance(20);
+        result.set_time(time);
+        db.insertResult(result);
+        Log.d("Chrono", "Insert value: " + time);
     }
 
     public void reinitializeTimer() {
@@ -135,7 +144,6 @@ public class ChronoFragment extends Fragment {
         public void run() {
             if (onPause) {
                 long chronoValue = pauseTime - startTime - pauseDelay;
-                Log.d("Chrono", "cv = " + chronoValue);
                 int secs = (int) (chronoValue / 1000);
                 int hours = secs / 60 / 60;
                 int mins = secs / 60 - hours * 60;
@@ -148,7 +156,6 @@ public class ChronoFragment extends Fragment {
                 startButton.setText("Démarrer");
             } else {
                 long deltaTime = SystemClock.uptimeMillis() - startTime - pauseDelay;
-                Log.d("chrono", "" + pauseDelay + ", deltaTime = " + deltaTime);
                 int secs = (int) (deltaTime / 1000);
                 int hours = secs / 60 / 60;
                 int mins = secs / 60 - hours * 60;

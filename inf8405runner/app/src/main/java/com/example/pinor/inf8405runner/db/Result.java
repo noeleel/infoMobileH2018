@@ -6,7 +6,7 @@ package com.example.pinor.inf8405runner.db;
 
 public class Result {
     private int _id;
-    private int _time;
+    private long _time;
     private int _distance;
 
     public Result() {
@@ -21,11 +21,11 @@ public class Result {
         this._id = _id;
     }
 
-    public int get_time() {
+    public long get_time() {
         return _time;
     }
 
-    public void set_time(int _time) {
+    public void set_time(long _time) {
         this._time = _time;
     }
 
