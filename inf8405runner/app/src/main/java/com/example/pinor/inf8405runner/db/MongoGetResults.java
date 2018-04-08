@@ -29,8 +29,8 @@ public class MongoGetResults extends AsyncTask<String, Void, String> {
             Log.d("MongoDB", "URL: " + url);
 
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setReadTimeout(2000);
-            conn.setConnectTimeout(2000);
+            conn.setReadTimeout(11000);
+            conn.setConnectTimeout(11000);
             conn.setRequestMethod("GET");
 
             int responseCode=conn.getResponseCode();

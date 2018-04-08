@@ -39,8 +39,8 @@ public class MongoPostResult extends AsyncTask<String, Void, String> {
             data.put("distance", Integer.parseInt(strings[1]));
 
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setReadTimeout(2000);
-            conn.setConnectTimeout(2000);
+            conn.setReadTimeout(11000);
+            conn.setConnectTimeout(11000);
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Content-Type", "application/json");
             conn.setDoInput(true);
