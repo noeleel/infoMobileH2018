@@ -47,6 +47,7 @@ public class WifiScannerActivity extends AppCompatActivity {
         getWifiListNearby(this.getApplicationContext());
     }
 
+    //configurer le partage
     private View.OnClickListener Share ( ) {
         Intent share = new Intent(android.content.Intent.ACTION_SEND);
         share.setType("text/plain");
