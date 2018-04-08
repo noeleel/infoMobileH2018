@@ -14,9 +14,9 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.pinor.inf8405runner.db.DBHandler;
+import com.example.pinor.inf8405runner.db.MongoGetResults;
+import com.example.pinor.inf8405runner.db.MongoPostResult;
 import com.example.pinor.inf8405runner.db.Result;
-
-import java.util.Timer;
 
 public class ChronoFragment extends Fragment {
 
@@ -105,7 +105,21 @@ public class ChronoFragment extends Fragment {
         result.set_distance(20);
         result.set_time(time);
         db.insertResult(result);
+        sendToMongo(result);
         Log.d("Chrono", "Insert value: " + time);
+    }
+
+    private void sendToMongo(final Result result) {
+        Thread thread = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    String response = new MongoPostResult().execute(Long.toString(result.get_time()), Integer.toString(result.get_distance())).get();
+                    Log.d("Chrono", response);
+                } catch (Exception e) {}
+            }
+        };
+        thread.start();
     }
 
     public void reinitializeTimer() {
@@ -114,29 +128,6 @@ public class ChronoFragment extends Fragment {
         pauseDelay = 0L;
         stopTime = 0L;
         currentTime = 0L;
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
     }
 
     private Runnable updateTimerThread = new Runnable() {
@@ -168,16 +159,32 @@ public class ChronoFragment extends Fragment {
     };
 
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
+    /************************************ Default override ************************************/
+
+
+    // TODO: Rename method, update argument and hook method into UI event
+    public void onButtonPressed(Uri uri) {
+        if (mListener != null) {
+            mListener.onFragmentInteraction(uri);
+        }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
