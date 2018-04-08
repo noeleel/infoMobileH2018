@@ -45,9 +45,8 @@ public class ChronoFragment extends Fragment {
     }
 
     // TODO: Rename and change types and number of parameters
-    public static ChronoFragment newInstance(String param1, String param2) {
-        ChronoFragment fragment = new ChronoFragment();
-        return fragment;
+    public static ChronoFragment newInstance() {
+        return new ChronoFragment();
     }
 
     @Override

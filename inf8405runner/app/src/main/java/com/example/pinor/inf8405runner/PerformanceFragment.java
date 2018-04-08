@@ -4,9 +4,18 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
+import com.example.pinor.inf8405runner.db.DBHandler;
+import com.example.pinor.inf8405runner.db.Result;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 
 /**
@@ -18,56 +27,76 @@ import android.view.ViewGroup;
  * create an instance of this fragment.
  */
 public class PerformanceFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     private OnFragmentInteractionListener mListener;
 
-    public PerformanceFragment() {
-        // Required empty public constructor
-    }
+    private DBHandler db;
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment PerformanceFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static PerformanceFragment newInstance(String param1, String param2) {
+    List<Result> results;
+
+    private List<TextView> timesText;
+    private List<TextView> lengthsText;
+
+    public PerformanceFragment() {}
+
+    public static PerformanceFragment newInstance() {
         PerformanceFragment fragment = new PerformanceFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        db = new DBHandler(getActivity());
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_performance, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View RootView = inflater.inflate(R.layout.fragment_performance, container, false);
+
+        timesText = new ArrayList<TextView>(5);
+        timesText.add((TextView) RootView.findViewById(R.id.time1_tv));
+        timesText.add((TextView) RootView.findViewById(R.id.time2_tv));
+        timesText.add((TextView) RootView.findViewById(R.id.time3_tv));
+        timesText.add((TextView) RootView.findViewById(R.id.time4_tv));
+        timesText.add((TextView) RootView.findViewById(R.id.time5_tv));
+
+        lengthsText = new ArrayList<TextView>(5);
+        lengthsText.add((TextView) RootView.findViewById(R.id.length1_tv));
+        lengthsText.add((TextView) RootView.findViewById(R.id.length2_tv));
+        lengthsText.add((TextView) RootView.findViewById(R.id.length3_tv));
+        lengthsText.add((TextView) RootView.findViewById(R.id.length4_tv));
+        lengthsText.add((TextView) RootView.findViewById(R.id.length5_tv));
+
+        loadDBResults();
+
+        return RootView;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
+    private void loadDBResults() {
+        results = db.getAllResults();
+        Collections.sort(results, Result.ResultComparator);
+
+        for (int i = 0; i < timesText.size(); i++) {
+            if (results.size() > i) {
+                int secs = (int) (results.get(i).get_time() / 1000);
+                int hours = secs / 60 / 60;
+                int mins = secs / 60 - hours * 60;
+                timesText.get(i).setText(String.format("%02d", hours) + ":" + String.format("%02d", mins) + ":" + String.format("%02d", secs));
+            }
+        }
+
+        for (int i = 0; i < lengthsText.size(); i++) {
+            if (results.size() > i) {
+                lengthsText.get(i).setText("" + results.get(i).get_distance());
+            }
+        }
+    }
+
+
+    /************************************ Default override ************************************/
+
+
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
