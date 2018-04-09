@@ -1,12 +1,18 @@
 package com.example.pinor.inf8405runner.db;
 
+import android.util.Log;
+
+import org.json.JSONObject;
+
+import java.util.Comparator;
+
 /**
  * Created by Pinor on 2018-04-05.
  */
 
 public class Result {
     private int _id;
-    private int _time;
+    private long _time;
     private int _distance;
 
     public Result() {
@@ -21,11 +27,11 @@ public class Result {
         this._id = _id;
     }
 
-    public int get_time() {
+    public long get_time() {
         return _time;
     }
 
-    public void set_time(int _time) {
+    public void set_time(long _time) {
         this._time = _time;
     }
 
@@ -36,4 +42,14 @@ public class Result {
     public void set_distance(int _distance) {
         this._distance = _distance;
     }
+
+    public static Comparator<Result> ResultComparator = new Comparator<Result>() {
+
+        public int compare(Result r1, Result r2) {
+            long resultTime1 = r1.get_time();
+            long resultTime2 = r2.get_time();
+
+            return (int) (resultTime1 - resultTime2);
+        }
+    };
 }

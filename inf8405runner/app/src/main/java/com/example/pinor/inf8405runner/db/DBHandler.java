@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +16,7 @@ import java.util.List;
 
 public class DBHandler extends SQLiteOpenHelper {
     // Database Version
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     private static final String DATABASE_NAME = "runningInfo";
 
     private static final String TABLE_RESULTS = "results";
@@ -29,10 +30,11 @@ public class DBHandler extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String CREATE_CONTACTS_TABLE = "CREATE TABLE" + TABLE_RESULTS + "(";
+        String CREATE_CONTACTS_TABLE = "CREATE TABLE " + TABLE_RESULTS + " (";
         CREATE_CONTACTS_TABLE += ID_COL_NAME + " INTEGER PRIMARY KEY,";
         CREATE_CONTACTS_TABLE += TIME_COL_NAME + " TEXT,";
-        CREATE_CONTACTS_TABLE += DISTANCE_COL_NAME + "TEXT" + ")";
+        CREATE_CONTACTS_TABLE += DISTANCE_COL_NAME + " TEXT" + ")";
+        Log.d("DB",CREATE_CONTACTS_TABLE);
         db.execSQL(CREATE_CONTACTS_TABLE);
     }
 
@@ -54,7 +56,6 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
     public List<Result> getAllResults() {
-
         List<Result> resultsList = new ArrayList<Result>();
 
         String selectQuery = "SELECT * FROM " + TABLE_RESULTS;
