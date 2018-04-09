@@ -1,5 +1,6 @@
 package com.example.pinor.inf8405runner;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -22,7 +23,6 @@ public class DrawerActivity extends AppCompatActivity
         PerformanceFragment.OnFragmentInteractionListener,
         ProgressionFragment.OnFragmentInteractionListener,
         ChronoFragment.OnFragmentInteractionListener,
-        MapFragment.OnFragmentInteractionListener,
         BatteryFragment.OnFragmentInteractionListener {
 
     @Override
@@ -96,7 +96,7 @@ public class DrawerActivity extends AppCompatActivity
         } else if (id == R.id.progression_frag) {
             fragment = new ProgressionFragment();
         } else if (id == R.id.map_frag) {
-            fragment = new MapFragment();
+            startActivity(new Intent(DrawerActivity.this, MapsActivity.class));
         } else if (id == R.id.chrono_frag) {
             fragment = new ChronoFragment();
         } else if (id == R.id.battery_frag) {
