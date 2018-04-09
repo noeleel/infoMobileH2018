@@ -1,13 +1,124 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout  xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.example.pinor.inf8405runner.BatteryFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Battery" />
+        android:layout_height="match_parent" android:orientation="vertical">
 
-</FrameLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:paddingBottom="20dip"
+            android:text="ÉTAT DE LA BATTERIE" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="#0090ff"
+            android:gravity="center"
+            android:text="Santé:" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:gravity="center"
+            android:textColor="#e12323"
+            android:text=""
+            android:paddingBottom="12dip"
+            android:id="@+id/bhealth"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="#0090ff"
+            android:gravity="center"
+            android:text="Utilisation:" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:gravity="center"
+            android:textColor="#e12323"
+            android:text="0"
+            android:paddingBottom="12dip"
+            android:id="@+id/blevel"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="#0090ff"
+            android:gravity="center"
+            android:text="Temperature:" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:gravity="center"
+            android:textColor="#e12323"
+            android:text="0"
+            android:paddingBottom="12dip"
+            android:id="@+id/btemp"/>
+
+
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:paddingBottom="20dip"
+            android:text="BANDWITH" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="#0090ff"
+            android:gravity="center"
+            android:text="Transmission:" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:gravity="center"
+            android:textColor="#e12323"
+            android:text="0"
+            android:paddingBottom="12dip"
+            android:id="@+id/tvTX"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="#0090ff"
+            android:gravity="center"
+            android:text="Reception:" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:gravity="center"
+            android:textColor="#e12323"
+            android:text="0"
+            android:paddingBottom="12dip"
+            android:id="@+id/tvRX"/>
+
+
+    </LinearLayout>
+
+
+
+
+</android.support.constraint.ConstraintLayout>
+
+
+
+
