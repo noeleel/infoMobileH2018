@@ -1,11 +1,21 @@
 package com.example.pinor.inf8405runner;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,10 +27,29 @@ import com.example.pinor.inf8405runner.db.DBHandler;
 import com.example.pinor.inf8405runner.db.MongoGetResults;
 import com.example.pinor.inf8405runner.db.MongoPostResult;
 import com.example.pinor.inf8405runner.db.Result;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ChronoFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
+
+    private SupportMapFragment mapFragment;
 
     private DBHandler db;
 
@@ -38,6 +67,8 @@ public class ChronoFragment extends Fragment {
     private boolean onStop = true;
 
     private Handler customHandler = new Handler();
+
+    public static final int REQUEST_LOCATION_CODE = 99;
 
 
     public ChronoFragment() {
@@ -59,6 +90,110 @@ public class ChronoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View RootView = inflater.inflate(R.layout.fragment_chrono, container, false);
+
+        if (mapFragment == null) {
+            mapFragment = SupportMapFragment.newInstance();
+            mapFragment.getMapAsync(new OnMapReadyCallback() {
+
+                private GoogleApiClient client;
+                private LocationRequest locationRequest;
+                private Location lastlocation;
+                private Marker currentLocationmMarker;
+                double latitude,longitude;
+                private GoogleMap googleMap;
+
+                private final List<LatLng> locations = new ArrayList<LatLng>();
+
+                @Override
+                public void onMapReady(GoogleMap mMap) {
+                    googleMap = mMap;
+                    googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                    googleMap.getUiSettings().setZoomGesturesEnabled(true);
+                    googleMap.getUiSettings().setRotateGesturesEnabled(true);
+                    if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                        buildGoogleApiClient();
+                        googleMap.setMyLocationEnabled(true);
+                    }
+                }
+
+                protected synchronized void buildGoogleApiClient() {
+                    client = new GoogleApiClient.Builder(getContext()).addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
+                        @SuppressLint("RestrictedApi")
+                        @Override
+                        public void onConnected (@Nullable Bundle bundle) {
+                            locationRequest = new LocationRequest();
+                            locationRequest.setInterval(100);
+                            locationRequest.setFastestInterval(1000);
+                            locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+
+
+                            if(ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION ) == PackageManager.PERMISSION_GRANTED)
+                            {
+                                LocationServices.FusedLocationApi.requestLocationUpdates(client, locationRequest, new LocationListener() {
+                                    @Override
+                                    public void onLocationChanged (Location location) {
+                                        // Permet la mise a jour de la position de l'utilisateur
+                                        // lorsque celui-ci se deplace
+                                        final double[] nLatitude = new double[1];
+                                        final double[] nLongitude = new double[1];
+                                        BitmapDescriptor bitmapDescriptor;
+                                        latitude = location.getLatitude();
+                                        longitude = location.getLongitude();
+                                        lastlocation = location;
+                                        if(currentLocationmMarker != null)
+                                        {
+                                            currentLocationmMarker.remove();
+                                        }
+                                        Log.d("lat = ",""+latitude);
+                                        LatLng latLng = new LatLng(location.getLatitude() , location.getLongitude());
+                                        locations.add(latLng);
+                                        MarkerOptions markerOptions = new MarkerOptions();
+                                        markerOptions.position(latLng);
+                                        markerOptions.title("Position actuelle");
+                                        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+
+                                        googleMap.addMarker(markerOptions);
+                                        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(),location.getLongitude()), 16));
+                                        //googleMap.animateCamera(CameraUpdateFactory.zoomBy(10));
+                                        if(client != null)
+                                        {
+                                            // Si l'utilisateur n'est plus la ou que sa fonction de localisation est desactive
+                                            // on le supprime
+                                            LocationServices.FusedLocationApi.removeLocationUpdates(client,this);
+                                        }
+
+                                    }
+                                });
+                            }
+
+                        }
+
+                        @Override
+                        public void onConnectionSuspended (int i) {
+
+                        }
+                    }).addOnConnectionFailedListener(new GoogleApiClient.OnConnectionFailedListener() {
+                        @Override
+                        public void onConnectionFailed (@NonNull ConnectionResult connectionResult) {
+
+                        }
+                    }).addApi(LocationServices.API).build();
+                    client.connect();
+                }
+
+            });
+
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+        {
+            checkLocationPermission();
+        }
+
+        // R.id.map is a FrameLayout, not a Fragment
+        getChildFragmentManager().beginTransaction().replace(R.id.map, mapFragment).commit();
+
+
         chronoText = (TextView) RootView.findViewById(R.id.time_tv);
 
         startButton = (Button) RootView.findViewById(R.id.start_b);
@@ -97,6 +232,25 @@ public class ChronoFragment extends Fragment {
         });
 
         return RootView;
+    }
+
+
+    public boolean checkLocationPermission()
+    {
+        if(ContextCompat.checkSelfPermission(getActivity().getApplicationContext(),Manifest.permission.ACCESS_FINE_LOCATION)  != PackageManager.PERMISSION_GRANTED )
+        {
+            if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) getActivity().getApplicationContext(),Manifest.permission.ACCESS_FINE_LOCATION))
+            {
+                ActivityCompat.requestPermissions((Activity) getActivity().getApplicationContext(),new String[] {Manifest.permission.ACCESS_FINE_LOCATION },REQUEST_LOCATION_CODE);
+            }
+            else
+            {
+                ActivityCompat.requestPermissions((Activity) getActivity().getApplicationContext(),new String[] {Manifest.permission.ACCESS_FINE_LOCATION },REQUEST_LOCATION_CODE);
+            }
+            return false;
+        }
+        else
+            return true;
     }
 
     public void insertTimeDB() {

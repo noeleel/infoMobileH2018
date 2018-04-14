@@ -116,8 +116,6 @@ public class DrawerActivity extends AppCompatActivity
             fragment = new PerformanceFragment();
         } else if (id == R.id.progression_frag) {
             fragment = new ProgressionFragment();
-        } else if (id == R.id.map_frag) {
-            startActivity(new Intent(DrawerActivity.this, MapsActivity.class));
         } else if (id == R.id.chrono_frag) {
             fragment = new ChronoFragment();
         } else if (id == R.id.battery_frag) {
