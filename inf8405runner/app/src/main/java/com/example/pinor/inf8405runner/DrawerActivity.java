@@ -1,11 +1,6 @@
 package com.example.pinor.inf8405runner;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.net.Uri;
-import android.os.BatteryManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -21,9 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
-import android.os.BatteryManager;
-import android.content.BroadcastReceiver;
+
 
 public class DrawerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -33,16 +26,13 @@ public class DrawerActivity extends AppCompatActivity
         MapFragment.OnFragmentInteractionListener,
         BatteryFragment.OnFragmentInteractionListener {
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawer);
 
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -83,6 +73,8 @@ public class DrawerActivity extends AppCompatActivity
         }
     }
 
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -113,6 +105,7 @@ public class DrawerActivity extends AppCompatActivity
 
         Fragment fragment = null;
 
+
         if (id == R.id.performance_frag) {
             fragment = new PerformanceFragment();
         } else if (id == R.id.progression_frag) {
@@ -140,4 +133,8 @@ public class DrawerActivity extends AppCompatActivity
 
     @Override
     public void onFragmentInteraction(Uri uri){}
+
+
+
+
 }
