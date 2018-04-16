@@ -1,5 +1,9 @@
 package com.example.pinor.inf8405runner.db;
 
+import android.util.Log;
+
+import org.json.JSONObject;
+
 import java.util.Comparator;
 
 /**
@@ -49,4 +53,3 @@ public class Result {
         }
     };
 }
-
