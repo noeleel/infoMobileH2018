@@ -4,10 +4,45 @@
     android:layout_height="match_parent"
     tools:context="com.example.pinor.inf8405runner.ProgressionFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Progression" />
+        android:orientation="vertical">
+
+        <Spinner
+            android:id="@+id/spinner_journey"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/journey_arrays"
+            android:prompt="@string/journey_prompt" />/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/button_share"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Partager" />
+
+            <Button
+                android:id="@+id/button_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Voir" />
+
+        </LinearLayout>
+
+        <com.google.android.gms.maps.MapView
+            android:id="@+id/mapView2"
+            android:layout_width="match_parent"
+            android:layout_height="431dp" />
+
+    </LinearLayout>
 
 </FrameLayout>
