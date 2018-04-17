@@ -16,21 +16,21 @@
             android:textStyle="bold"
             android:gravity="center"
             android:paddingBottom="20dip"
-            android:text="ÉTAT DE LA BATTERIE" />
+            android:text="BATTERIE" />
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="14sp"
             android:textColor="#0090ff"
             android:gravity="center"
-            android:text="Santé:" />
+            android:text="État:" />
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="14sp"
             android:gravity="center"
             android:textColor="#e12323"
-            android:text=""
+            android:text=" "
             android:paddingBottom="12dip"
             android:id="@+id/bhealth"/>
         <TextView
@@ -40,6 +40,7 @@
             android:textColor="#0090ff"
             android:gravity="center"
             android:text="Utilisation:" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -49,6 +50,7 @@
             android:text="0"
             android:paddingBottom="12dip"
             android:id="@+id/blevel"/>
+
 
         <TextView
             android:layout_width="match_parent"
@@ -66,7 +68,6 @@
             android:text="0"
             android:paddingBottom="12dip"
             android:id="@+id/btemp"/>
-
 
 
 
@@ -100,7 +101,7 @@
             android:textSize="14sp"
             android:textColor="#0090ff"
             android:gravity="center"
-            android:text="Reception:" />
+            android:text="Réception:" />
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
