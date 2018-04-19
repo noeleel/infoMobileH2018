@@ -33,12 +33,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
 
@@ -71,9 +65,8 @@ public class ProgressionFragment extends Fragment implements OnMapReadyCallback 
         // Required empty public constructor
     }
 
-    public static ProgressionFragment newInstance(String param1, String param2) {
+    public static ProgressionFragment newInstance() {
         ProgressionFragment fragment = new ProgressionFragment();
-        Bundle args = new Bundle();
         return fragment;
     }
 
@@ -90,19 +83,19 @@ public class ProgressionFragment extends Fragment implements OnMapReadyCallback 
         View RootView = inflater.inflate(R.layout.fragment_progression, container, false);
 
 
-        mapView = (MapView)RootView.findViewById(R.id.mapView2);
+        mapView = RootView.findViewById(R.id.mapView2);
         mapView.onCreate(savedInstanceState);
 
         mapView.getMapAsync(this);
 
-        spinner = (Spinner) RootView.findViewById(R.id.spinner_journey);
-        btnShare = (Button) RootView.findViewById(R.id.button_share);
-        btnView = (Button) RootView.findViewById(R.id.button_view);
+        spinner =  RootView.findViewById(R.id.spinner_journey);
+        btnShare = RootView.findViewById(R.id.button_share);
+        btnView = RootView.findViewById(R.id.button_view);
         try {
             db = new DBHandler(getActivity());
             runs = db.getRunInstance();
             for (int i = 0; i < runs.size(); i++) {
-                Log.d("Progression - Run", "Run " + Integer.toString(runs.get(i).get_id()) + " Date " + runs.get(i).get_date().toLocaleString());
+                Log.d("Progression - Run", "Run " + Integer.toString(runs.get(i).get_id()) + " Date " + runs.get(i).get_date().toString());
 
                 if (spinner.getSelectedItem() == "Itinéraire 1") {
                     index = 0;
@@ -112,12 +105,17 @@ public class ProgressionFragment extends Fragment implements OnMapReadyCallback 
                     index = 2;
                 }
                 locationList = runs.get(index).get_Points();
-
+                Toast.makeText(getContext() , Integer.toString(i) + " " +locationList.get(0).toString(),
+                        Toast.LENGTH_SHORT).show();
             }
 
             for (Location location : locationList) {
                 latLngList.add(new LatLng(location.getLatitude(), location.getLongitude()));
             }
+
+
+
+
         } catch(Exception e){
             Log.d("Db","Impossible d'utiliser la db");
         }
@@ -128,9 +126,7 @@ public class ProgressionFragment extends Fragment implements OnMapReadyCallback 
 
                 Toast.makeText(v.getContext() , "Partage de l' "+ String.valueOf(spinner.getSelectedItem()),
                         Toast.LENGTH_SHORT).show();
-                latLngList.add(new LatLng(0,0));
-                latLngList.add(new LatLng(1,1));
-                latLngList.add(new LatLng(2,2));
+
                 Share_data(latLngList);
 
             }
@@ -144,23 +140,35 @@ public class ProgressionFragment extends Fragment implements OnMapReadyCallback 
 
                 Toast.makeText(v.getContext(), "Affichage de l' " + String.valueOf(spinner.getSelectedItem()),
                         Toast.LENGTH_SHORT).show();
-                OnMapShow(latLngList);
+                try{
+                    latLngList.add(new LatLng(0,0));
+                    latLngList.add(new LatLng(1,1));
+                    latLngList.add(new LatLng(2,2));
+                    latLngList.add(new LatLng(3,3));
+                    latLngList.add(new LatLng(4,4));
+                    latLngList.add(new LatLng(5,5));
+                    OnMapShow(latLngList);
+                }
+
+                        catch(Exception e){
+                    Log.d("Error","Null location list");
+                        } finally {
+                    Toast.makeText(v.getContext() , "Location list is empty",
+                            Toast.LENGTH_SHORT).show();}
             }
 
         });
         return RootView;
     }
 
-    private boolean isExternalStorageWritable() {
-        String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state)) {
-            return true;
-        }
-        return false;
-    }
-
 
     public void Share_data( ArrayList<LatLng> latLngList){
+        latLngList.add(new LatLng(0,0));
+        latLngList.add(new LatLng(1,1));
+        latLngList.add(new LatLng(2,2));
+        latLngList.add(new LatLng(3,3));
+        latLngList.add(new LatLng(4,4));
+        latLngList.add(new LatLng(5,5));
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
         sendIntent.putExtra(Intent.EXTRA_TEXT, latLngList.toString());
@@ -191,11 +199,11 @@ public class ProgressionFragment extends Fragment implements OnMapReadyCallback 
 
 
     // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
+   /* public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
-    }
+    }*/
 
     @Override
     public void onAttach(Context context) {
