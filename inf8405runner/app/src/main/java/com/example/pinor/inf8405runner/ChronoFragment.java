@@ -6,11 +6,13 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -20,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.pinor.inf8405runner.db.DBHandler;
 import com.example.pinor.inf8405runner.db.MongoGetResults;
@@ -70,11 +73,10 @@ public class ChronoFragment extends Fragment implements OnMapReadyCallback,  Goo
 
     MapView mapView;
     GoogleMap googlemap;
+    public static final int REQUEST_LOCATION_CODE = 99;
     private LocationRequest locationRequest;
     private GoogleApiClient client;
-    private double latitude;
-    private double longitude;
-    private Location lastlocation;
+    private double latitude, longitude;
     private Marker currentLocationMarker;
     private ArrayList<Location> locationList = new ArrayList<> ();
 
@@ -90,10 +92,13 @@ public class ChronoFragment extends Fragment implements OnMapReadyCallback,  Goo
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+        {
+            checkLocationPermission();
+        }
         db = new DBHandler(getActivity());
     }
 
-    @SuppressLint("MissingPermission")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -207,22 +212,21 @@ public class ChronoFragment extends Fragment implements OnMapReadyCallback,  Goo
     /************************************ Default override ************************************/
 
 
-    @SuppressLint("MissingPermission")
     @Override
     public void onMapReady(GoogleMap map)
     {
         this.googlemap = map;
-        googlemap.setMyLocationEnabled(true);
+        if (ContextCompat.checkSelfPermission(this.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            buildGoogleApiClient();
+            googlemap.setMyLocationEnabled(true);
+        }
         googlemap.setTrafficEnabled(true);
         googlemap.setIndoorEnabled(true);
         googlemap.setBuildingsEnabled(true);
         googlemap.getUiSettings().setZoomControlsEnabled(true);
         googlemap.setMinZoomPreference(12);
 
-        if (ContextCompat.checkSelfPermission(this.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            buildGoogleApiClient();
-            googlemap.setMyLocationEnabled(true);
-        }
+
 
     }
 
@@ -297,6 +301,51 @@ public class ChronoFragment extends Fragment implements OnMapReadyCallback,  Goo
         }
     }
 
+
+
+    public boolean checkLocationPermission()
+    {
+        if(ContextCompat.checkSelfPermission(this.getContext(),Manifest.permission.ACCESS_FINE_LOCATION)  != PackageManager.PERMISSION_GRANTED )
+        {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this.getActivity(),Manifest.permission.ACCESS_FINE_LOCATION))
+            {
+                ActivityCompat.requestPermissions(this.getActivity(),new String[] {Manifest.permission.ACCESS_FINE_LOCATION },REQUEST_LOCATION_CODE);
+            }
+            else
+            {
+                ActivityCompat.requestPermissions(this.getActivity(),new String[] {Manifest.permission.ACCESS_FINE_LOCATION },REQUEST_LOCATION_CODE);
+            }
+            return false;
+        }
+        else
+            return true;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        // Permet de s'assurer que l'utilisateur a bien activite la localisation
+        // Sinon, un DialogBox s'affichera pour demander a l'utilisateur de l'activer
+        switch(requestCode)
+        {
+            case REQUEST_LOCATION_CODE:
+                if(grantResults.length >0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                {
+                    if(ContextCompat.checkSelfPermission(this.getContext(),Manifest.permission.ACCESS_FINE_LOCATION) !=  PackageManager.PERMISSION_GRANTED)
+                    {
+                        if(client == null)
+                        {
+                            buildGoogleApiClient();
+                        }
+                        googlemap.setMyLocationEnabled(true);
+                    }
+                }
+                else
+                {
+                    Toast.makeText(this.getActivity(),"Permission Denied" , Toast.LENGTH_LONG).show();
+                }
+        }
+    }
+
     @Override
     public void onConnectionSuspended (int i) {
 
@@ -314,7 +363,6 @@ public class ChronoFragment extends Fragment implements OnMapReadyCallback,  Goo
 
         latitude = location.getLatitude();
         longitude = location.getLongitude();
-        lastlocation = location;
         if(currentLocationMarker != null)
         {
             currentLocationMarker.remove();
@@ -330,7 +378,7 @@ public class ChronoFragment extends Fragment implements OnMapReadyCallback,  Goo
                     index = i;
                     break;
                 } else {
-                    index = 1;
+                    index = 0;
                 }
             }
             Run run = new Run();
@@ -340,6 +388,8 @@ public class ChronoFragment extends Fragment implements OnMapReadyCallback,  Goo
             run.set_date(Calendar.getInstance().getTime());
             run.set_Points(locationList);
             db.insertRun(run);
+
+            Toast.makeText(this.getActivity(),"Nouvel ajout dans la db" , Toast.LENGTH_LONG).show();
         } catch(Exception e) {
             Log.d("Db", "Impossible d'utiliser la db");
         }
