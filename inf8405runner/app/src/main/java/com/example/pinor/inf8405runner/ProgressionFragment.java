@@ -88,7 +88,7 @@ public class ProgressionFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        db = new DBHandler(getActivity());
+
     }
 
 
@@ -98,6 +98,7 @@ public class ProgressionFragment extends Fragment implements OnMapReadyCallback,
         // Inflate the layout for this fragment
         View RootView = inflater.inflate(R.layout.fragment_progression, container, false);
         try{
+            db = new DBHandler(getActivity());
             locationList = (ArrayList<Location>) getArguments().getSerializable("list");
             Log.d("Location", locationList.get(0).toString());
             Log.d("Location size", Integer.toString(locationList.size()));
@@ -132,7 +133,9 @@ public class ProgressionFragment extends Fragment implements OnMapReadyCallback,
         spinner =  RootView.findViewById(R.id.spinner_journey);
         btnShare = RootView.findViewById(R.id.button_share);
         btnView = RootView.findViewById(R.id.button_view);
+        ArrayList<Run> runs = db.getRunInstance();
         try {
+
             for (int i = 0; i < runs.size(); i++) {
                 if (runs.get(i).get_Points()!=null){
                     Log.d("Progression - Run", "Run " + Integer.toString(runs.get(i).get_id()) + " Date " + runs.get(i).get_date().toString());
