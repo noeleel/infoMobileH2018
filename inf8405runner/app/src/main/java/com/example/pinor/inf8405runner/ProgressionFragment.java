@@ -33,7 +33,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 
 import com.example.pinor.inf8405runner.db.DBHandler;
@@ -41,7 +44,7 @@ import com.example.pinor.inf8405runner.db.Run;
 
 
 
-public class ProgressionFragment extends Fragment implements OnMapReadyCallback {
+public class ProgressionFragment extends Fragment implements OnMapReadyCallback, Serializable {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 
@@ -60,6 +63,7 @@ public class ProgressionFragment extends Fragment implements OnMapReadyCallback 
     private ArrayList<Run> runs;
     private DBHandler db;
     private int index ;
+    private Date date;
 
     public ProgressionFragment() {
         // Required empty public constructor
@@ -70,9 +74,21 @@ public class ProgressionFragment extends Fragment implements OnMapReadyCallback 
         return fragment;
     }
 
+
+    public static ProgressionFragment newInstance(ArrayList<Location> locationList) {
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("list",locationList);
+
+        ProgressionFragment fragment = new ProgressionFragment();
+        fragment.setArguments(bundle);
+
+        return fragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        db = new DBHandler(getActivity());
     }
 
 
@@ -81,8 +97,33 @@ public class ProgressionFragment extends Fragment implements OnMapReadyCallback 
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View RootView = inflater.inflate(R.layout.fragment_progression, container, false);
+        try{
+            locationList = (ArrayList<Location>) getArguments().getSerializable("list");
+            Log.d("Location", locationList.get(0).toString());
+            Log.d("Location size", Integer.toString(locationList.size()));
+            int index = 0;
 
+            ArrayList<Run> runs = db.getRunInstance();
+            for (int i = 0; i < runs.size(); i++) {
+                if (runs.get(i).get_Points() == null) {
+                    index = i;
+                    break;
+                } else {
+                    index = CompareDate(runs.get(0).get_date(), runs.get(1).get_date(), runs.get(2).get_date());
+                }
+            }
+            Run run = new Run();
 
+            run.set_id(index);
+            run.set_date(Calendar.getInstance().getTime());
+            run.set_Points(locationList);
+            if (locationList == null) {
+                Toast.makeText(this.getActivity(), "Empty!!", Toast.LENGTH_SHORT).show();
+            }
+            db.insertRun(run);
+        } catch (Exception e){
+            Log.d("Bundle", "Null bundle");
+        }
         mapView = RootView.findViewById(R.id.mapView2);
         mapView.onCreate(savedInstanceState);
 
@@ -92,19 +133,26 @@ public class ProgressionFragment extends Fragment implements OnMapReadyCallback 
         btnShare = RootView.findViewById(R.id.button_share);
         btnView = RootView.findViewById(R.id.button_view);
         try {
-            db = new DBHandler(getActivity());
-            runs = db.getRunInstance();
             for (int i = 0; i < runs.size(); i++) {
-                Log.d("Progression - Run", "Run " + Integer.toString(runs.get(i).get_id()) + " Date " + runs.get(i).get_date().toString());
-
-                if (spinner.getSelectedItem() == "Itinéraire 1") {
-                    index = 0;
-                } else if (spinner.getSelectedItem() == "Itinéraire 2") {
-                    index = 1;
-                } else if (spinner.getSelectedItem() == "Itinéraire 3") {
-                    index = 2;
+                if (runs.get(i).get_Points()!=null){
+                    Log.d("Progression - Run", "Run " + Integer.toString(runs.get(i).get_id()) + " Date " + runs.get(i).get_date().toString());
+                    Toast.makeText(getContext() , Integer.toString(runs.size()),
+                            Toast.LENGTH_SHORT).show();
+                    if (spinner.getSelectedItem() == "Itinéraire 1") {
+                        index = 0;
+                        if (runs.get(i).get_id() == index)
+                            locationList = runs.get(i).get_Points();
+                    } else if (spinner.getSelectedItem() == "Itinéraire 2") {
+                        index = 1;
+                        if (runs.get(i).get_id() == index)
+                            locationList = runs.get(i).get_Points();
+                    } else if (spinner.getSelectedItem() == "Itinéraire 3") {
+                        index = 2;
+                        if (runs.get(i).get_id() == index)
+                            locationList = runs.get(i).get_Points();
+                    }
                 }
-                locationList = runs.get(index).get_Points();
+
                 Toast.makeText(getContext() , Integer.toString(i) + " " +locationList.get(0).toString(),
                         Toast.LENGTH_SHORT).show();
             }
@@ -114,10 +162,11 @@ public class ProgressionFragment extends Fragment implements OnMapReadyCallback 
             }
 
 
-
-
         } catch(Exception e){
             Log.d("Db","Impossible d'utiliser la db");
+            Toast.makeText(getContext() , "Location list is empty",
+                    Toast.LENGTH_SHORT).show();
+
         }
         btnShare.setOnClickListener(new OnClickListener() {
 
@@ -141,12 +190,6 @@ public class ProgressionFragment extends Fragment implements OnMapReadyCallback 
                 Toast.makeText(v.getContext(), "Affichage de l' " + String.valueOf(spinner.getSelectedItem()),
                         Toast.LENGTH_SHORT).show();
                 try{
-                    latLngList.add(new LatLng(0,0));
-                    latLngList.add(new LatLng(1,1));
-                    latLngList.add(new LatLng(2,2));
-                    latLngList.add(new LatLng(3,3));
-                    latLngList.add(new LatLng(4,4));
-                    latLngList.add(new LatLng(5,5));
                     OnMapShow(latLngList);
                 }
 
@@ -161,14 +204,19 @@ public class ProgressionFragment extends Fragment implements OnMapReadyCallback 
         return RootView;
     }
 
+    public int CompareDate(Date date1, Date date2, Date date3) {
+        int indexI = 0;
+        if (date1.compareTo(date2) < 0 && date1.compareTo(date3) < 0) {
+            indexI = 0;
+        } else if (date2.compareTo(date1) < 0 && date2.compareTo(date3) < 0) {
+            indexI = 1;
+        } else if (date3.compareTo(date1) < 0 && date3.compareTo(date2) < 0) {
+            indexI = 2;
+        }
+        return indexI;
+    }
 
     public void Share_data( ArrayList<LatLng> latLngList){
-        latLngList.add(new LatLng(0,0));
-        latLngList.add(new LatLng(1,1));
-        latLngList.add(new LatLng(2,2));
-        latLngList.add(new LatLng(3,3));
-        latLngList.add(new LatLng(4,4));
-        latLngList.add(new LatLng(5,5));
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
         sendIntent.putExtra(Intent.EXTRA_TEXT, latLngList.toString());
