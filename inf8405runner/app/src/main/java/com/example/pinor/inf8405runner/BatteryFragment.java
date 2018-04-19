@@ -15,8 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.net.TrafficStats;
-
-
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
@@ -35,6 +33,8 @@ public class BatteryFragment extends Fragment {
     TextView tvTX;
     TextView tvRX;
 
+    int i=1;
+    int initLevel=0;
 
     private Handler mHandler = new Handler();
     private long mStartRX = 0;
@@ -49,8 +49,6 @@ public class BatteryFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
-
 
 
 // TODO: Rename and change types and number of parameters
@@ -71,6 +69,7 @@ public class BatteryFragment extends Fragment {
 
         mStartRX = TrafficStats.getTotalRxBytes();
         mStartTX = TrafficStats.getTotalTxBytes();
+        // verification si le dispositif supporte TrafficsStats
         if (mStartRX == TrafficStats.UNSUPPORTED || mStartTX == TrafficStats.UNSUPPORTED) {
 
             AlertDialog.Builder alert = new AlertDialog.Builder(getActivity ());
@@ -79,6 +78,7 @@ public class BatteryFragment extends Fragment {
             alert.show();
         }
         else {
+            //appel du runnable. Mise à jour du taffic par seconde
             mHandler.postDelayed(mRunnable, 1000);
 
         }
@@ -106,101 +106,111 @@ public class BatteryFragment extends Fragment {
     };
 
 
-
     // definir le broadcast Receiver pour recevoir info battery
-    private BroadcastReceiver mBatInfoReceiver = new BroadcastReceiver ()
+    private BroadcastReceiver mBatInfoReceiver;
 
     {
+        mBatInfoReceiver = new BroadcastReceiver ()
 
-        public void onReceive (Context context, Intent intent){
-            int level = intent.getIntExtra (BatteryManager.EXTRA_LEVEL, 0);
-            int scale = intent.getIntExtra (BatteryManager.EXTRA_SCALE, -1);
-            int health = intent.getIntExtra (BatteryManager.EXTRA_HEALTH, 0);
+        {
 
-            boolean present = intent.getBooleanExtra (BatteryManager.EXTRA_PRESENT, false);
+            public void onReceive(Context context, Intent intent) {
+                int level = intent.getIntExtra (BatteryManager.EXTRA_LEVEL, -1);
+                int scale = intent.getIntExtra (BatteryManager.EXTRA_SCALE, -1);
+                int health = intent.getIntExtra (BatteryManager.EXTRA_HEALTH, 0);
 
-            String etatBatt = "inconnu";
 
-            if (present) {
+                boolean present = intent.getBooleanExtra (BatteryManager.EXTRA_PRESENT, false);
 
-                //Santé de la batterie
+                String etatBatt = "inconnu";
 
-                int healthLbl = -1;
+                if (present) {
 
-                switch (health) {
-                    case BatteryManager.BATTERY_HEALTH_COLD:
-                        healthLbl = 7;
-                        etatBatt = "Froide";
-                        break;
+                    //Santé de la batterie
 
-                    case BatteryManager.BATTERY_HEALTH_DEAD:
-                        healthLbl = 4;
-                        etatBatt = "Morte";
-                        break;
+                    int healthLbl = -1;
 
-                    case BatteryManager.BATTERY_HEALTH_GOOD:
-                        healthLbl = 2;
-                        etatBatt = "Bonne";
-                        break;
+                    switch (health) {
+                        case BatteryManager.BATTERY_HEALTH_COLD:
+                            healthLbl = 7;
+                            etatBatt = "Froide";
+                            break;
 
-                    case BatteryManager.BATTERY_HEALTH_OVER_VOLTAGE:
-                        healthLbl = 5;
-                        etatBatt = "surtension";
-                        break;
+                        case BatteryManager.BATTERY_HEALTH_DEAD:
+                            healthLbl = 4;
+                            etatBatt = "Morte";
+                            break;
 
-                    case BatteryManager.BATTERY_HEALTH_OVERHEAT:
-                        healthLbl = 3;
-                        etatBatt = "surchauffé";
-                        break;
+                        case BatteryManager.BATTERY_HEALTH_GOOD:
+                            healthLbl = 2;
+                            etatBatt = "Bonne";
+                            break;
 
-                    case BatteryManager.BATTERY_HEALTH_UNSPECIFIED_FAILURE:
-                        healthLbl = 6;
-                        etatBatt = "Problème Inconnu";
-                        break;
+                        case BatteryManager.BATTERY_HEALTH_OVER_VOLTAGE:
+                            healthLbl = 5;
+                            etatBatt = "surtension";
+                            break;
 
-                    case BatteryManager.BATTERY_HEALTH_UNKNOWN:
-                    default:
-                        break;
+                        case BatteryManager.BATTERY_HEALTH_OVERHEAT:
+                            healthLbl = 3;
+                            etatBatt = "surchauffé";
+                            break;
+
+                        case BatteryManager.BATTERY_HEALTH_UNSPECIFIED_FAILURE:
+                            healthLbl = 6;
+                            etatBatt = "Problème Inconnu";
+                            break;
+
+                        case BatteryManager.BATTERY_HEALTH_UNKNOWN:
+                        default:
+                            break;
+                    }
+
+                    if (healthLbl != -1) {
+                        tvHealth.setText (String.valueOf (etatBatt));
+
+                    }
+
+
+                    // Utilisation de la batterie en pourcentage ...
+
+                     if (level != -1 && scale != -1) {
+
+                        // batteryPct =  (startLevel-(level / (float) scale));
+
+                         int startLevel=level+i;  // variable  global i, pour pouvoir differentier la valeur initiale
+
+                         if (startLevel > level) {
+                             initLevel=level;  //variable global initLevel, stocke la valeur initiale de level
+                             --i;
+                         }
+
+                        tvUse_bat.setText (String.valueOf (initLevel-level) + "%");
+
+                    }
+
+                    //Temperature de la batterie lors de l'utilisation de l'application
+                    int temperature = intent.getIntExtra (BatteryManager.EXTRA_TEMPERATURE, 0);
+
+                    if (temperature > 0) {
+                        float temp = ((float) temperature) / 10f;
+                        tvTemp.setText (temp + "°C");
+
+                    }
+
+                } else {
+                    AlertDialog.Builder alert = new AlertDialog.Builder (getActivity ());
+                    alert.setTitle ("Erreur!");
+                    alert.setMessage ("Aucune batterie installé.");
+                    alert.show ();
+
                 }
-
-                if (healthLbl != -1) {
-                    tvHealth.setText (String.valueOf (etatBatt));
-
-                }
-
-                // Utilisation de la batterie en pourcentage ...
-
-                if (level != -1 && scale != -1) {
-                    //batteryPct = (int) ((level / (float) scale) * 100f);
-                    int batteryPct = (int) ((level / (float) scale));
-
-                    tvUse_bat.setText (String.valueOf (batteryPct) + "%");
-
-
-                }
-
-                //Temperature de la batterie lors de l'utilisation de l'application
-                int temperature = intent.getIntExtra (BatteryManager.EXTRA_TEMPERATURE, 0);
-
-                if (temperature > 0) {
-                    float temp = ((float) temperature) / 10f;
-                    tvTemp.setText (temp + "°C");
-
-                }
-
-
-            } else {
-                AlertDialog.Builder alert = new AlertDialog.Builder(getActivity ());
-                alert.setTitle("Erreur!");
-                alert.setMessage("Aucune batterie installé.");
-                alert.show();
 
             }
 
-        }
 
-
-    };
+        };
+    }
 
 
     //Affichage
@@ -208,36 +218,29 @@ public class BatteryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-
         View view1 = inflater.inflate(R.layout.fragment_battery, container, false);
-
 
         //Affichage batterie
         tvUse_bat = (TextView) view1.findViewById (R.id.blevel);
         tvHealth = (TextView)view1.findViewById(R.id.bhealth);
         tvTemp = (TextView)view1.findViewById(R.id.btemp);
-
-        //Obtention de l'information de la batterie
         getActivity ().registerReceiver (this.mBatInfoReceiver,new IntentFilter (Intent.ACTION_BATTERY_CHANGED));
+        //getActivity ().registerReceiver(BI, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
 
         //Affichage utilisation de la bande passante
         tvRX = (TextView)view1.findViewById(R.id.tvRX);
         tvTX = (TextView)view1.findViewById(R.id.tvTX);
+
 
         //returner inflater.inflate(R.layout.fragment_battery, container, false);
         return view1;
 
     }
 
-
-
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
-
-
-
 
 }
 
