@@ -175,7 +175,7 @@ public class ChronoFragment extends Fragment implements OnMapReadyCallback,  Goo
         return RootView;
     }
 
-    public float getDistance ( ) {
+    public float getDistance() {
         float distance, SumDistance = 0;
         int j = 0;
         for(;j<locationList.size()-1;j++){
@@ -189,7 +189,7 @@ public class ChronoFragment extends Fragment implements OnMapReadyCallback,  Goo
     public void insertTimeDB() {
         long time = stopTime - startTime - pauseDelay;
         Result result = new Result();
-        result.set_distance(20);
+        result.set_distance(getDistance());
         result.set_time(time);
         db.insertResult(result);
         sendToMongo(result);
@@ -201,7 +201,7 @@ public class ChronoFragment extends Fragment implements OnMapReadyCallback,  Goo
             @Override
             public void run() {
                 try {
-                    String response = new MongoPostResult().execute(Long.toString(result.get_time()), Integer.toString(result.get_distance())).get();
+                    String response = new MongoPostResult().execute(Long.toString(result.get_time()), Float.toString(result.get_distance())).get();
                     Log.d("Chrono", response);
                 } catch (Exception e) {}
             }

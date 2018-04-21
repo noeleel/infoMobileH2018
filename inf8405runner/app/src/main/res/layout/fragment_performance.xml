@@ -145,9 +145,10 @@
             android:visibility="visible" />
 
         <TextView
+            android:id="@+id/cal_tv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="result"
+            android:text="0 cal/min"
             android:visibility="visible" />
 
     </LinearLayout>

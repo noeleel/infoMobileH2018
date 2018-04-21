@@ -36,6 +36,7 @@ public class PerformanceFragment extends Fragment {
 
     private List<TextView> timesText;
     private List<TextView> lengthsText;
+    private TextView calText;
 
     public PerformanceFragment() {}
 
@@ -68,7 +69,11 @@ public class PerformanceFragment extends Fragment {
         lengthsText.add((TextView) RootView.findViewById(R.id.length4_tv));
         lengthsText.add((TextView) RootView.findViewById(R.id.length5_tv));
 
+        calText = (TextView) RootView.findViewById(R.id.cal_tv);
+
         loadDBResults();
+
+        calText.setText(String.format("%.1f", computeCal()) + " cal/course");
 
         return RootView;
     }
@@ -91,6 +96,22 @@ public class PerformanceFragment extends Fragment {
                 lengthsText.get(i).setText("" + results.get(i).get_distance());
             }
         }
+    }
+
+    private double computeCal() {
+        double cal = 0;
+
+        int distanceMoy = 0;
+        for (int i = 0; i < 5; i++) {
+            distanceMoy += results.get(i).get_distance();
+        }
+        distanceMoy = distanceMoy / 5;
+
+        Log.d("", "" + distanceMoy);
+
+        cal = 0.75 * 170 * distanceMoy;
+
+        return cal;
     }
 
 
