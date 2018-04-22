@@ -102,7 +102,7 @@ public class PerformanceFragment extends Fragment {
         double cal = 0;
 
         int distanceMoy = 0;
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < results.size(); i++) {
             distanceMoy += results.get(i).get_distance();
         }
         distanceMoy = distanceMoy / 5;

@@ -78,6 +78,33 @@
             android:textStyle="bold"
             android:gravity="center"
             android:paddingBottom="20dip"
+            android:text="PRESSURE" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="#0090ff"
+            android:gravity="center"
+            android:text="Pression:" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:gravity="center"
+            android:textColor="#e12323"
+            android:text="0"
+            android:paddingBottom="12dip"
+            android:id="@+id/pression_tv"/>
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:paddingBottom="20dip"
             android:text="BANDWITH" />
         <TextView
             android:layout_width="match_parent"
@@ -111,7 +138,6 @@
             android:text="0"
             android:paddingBottom="12dip"
             android:id="@+id/tvRX"/>
-
 
     </LinearLayout>
 

@@ -16,10 +16,6 @@
             android:id="@+id/progression_frag"
             android:icon="@drawable/ic_menu_gallery"
             android:title="Progression" />
-        <item
-            android:id="@+id/map_frag"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Maps" />
     </group>
 
     <item android:title="Paramètres">

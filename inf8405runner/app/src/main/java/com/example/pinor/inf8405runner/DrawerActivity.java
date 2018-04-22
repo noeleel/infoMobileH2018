@@ -1,5 +1,10 @@
 package com.example.pinor.inf8405runner;
 
+import android.content.Context;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -23,7 +28,11 @@ public class DrawerActivity extends AppCompatActivity
         PerformanceFragment.OnFragmentInteractionListener,
         ProgressionFragment.OnFragmentInteractionListener,
         ChronoFragment.OnFragmentInteractionListener,
-        BatteryFragment.OnFragmentInteractionListener {
+        BatteryFragment.OnFragmentInteractionListener,
+        SensorEventListener {
+
+    private SensorManager sensorManager;
+    private Sensor mPressure;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +67,9 @@ public class DrawerActivity extends AppCompatActivity
         FragmentTransaction ft = fragmentManager.beginTransaction();
         ft.replace(R.id.drawer_content, fragment);
         ft.commit();
+
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        mPressure = sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE);
     }
 
 
@@ -104,7 +116,6 @@ public class DrawerActivity extends AppCompatActivity
 
         Fragment fragment = null;
 
-
         if (id == R.id.performance_frag) {
             fragment = new PerformanceFragment();
         } else if (id == R.id.progression_frag) {
@@ -113,7 +124,6 @@ public class DrawerActivity extends AppCompatActivity
             fragment = new ChronoFragment();
         } else if (id == R.id.battery_frag) {
             fragment = new BatteryFragment();
-
         }
 
         if (fragment != null) {
@@ -131,7 +141,29 @@ public class DrawerActivity extends AppCompatActivity
     @Override
     public void onFragmentInteraction(Uri uri){}
 
+    @Override
+    public final void onAccuracyChanged(Sensor sensor, int accuracy) {
+        // Do something here if sensor accuracy changes.
+    }
 
+    @Override
+    public final void onSensorChanged(SensorEvent event) {
+        float pressure = event.values[0];
+        // Do something with this sensor data.
+        PressureSingleton.getInstance().setPressure(pressure / 10);
+    }
 
+    @Override
+    protected void onResume() {
+        // Register a listener for the sensor.
+        super.onResume();
+        sensorManager.registerListener(this, mPressure, SensorManager.SENSOR_DELAY_NORMAL);
+    }
 
+    @Override
+    protected void onPause() {
+        // Be sure to unregister the sensor when the activity pauses.
+        super.onPause();
+        sensorManager.unregisterListener(this);
+    }
 }
