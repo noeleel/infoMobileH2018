@@ -13,7 +13,7 @@ import java.util.Comparator;
 public class Result {
     private int _id;
     private long _time;
-    private int _distance;
+    private float _distance;
 
     public Result() {
         
@@ -35,11 +35,11 @@ public class Result {
         this._time = _time;
     }
 
-    public int get_distance() {
+    public float get_distance() {
         return _distance;
     }
 
-    public void set_distance(int _distance) {
+    public void set_distance(float _distance) {
         this._distance = _distance;
     }
 

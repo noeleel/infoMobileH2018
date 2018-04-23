@@ -33,6 +33,8 @@ public class BatteryFragment extends Fragment {
     TextView tvTX;
     TextView tvRX;
 
+    TextView tvPression;
+
     int i=1;
     int initLevel=0;
 
@@ -231,6 +233,9 @@ public class BatteryFragment extends Fragment {
         tvRX = (TextView)view1.findViewById(R.id.tvRX);
         tvTX = (TextView)view1.findViewById(R.id.tvTX);
 
+        // Affichage de la pression
+        tvPression = (TextView)view1.findViewById(R.id.pression_tv);
+        tvPression.setText(String.format("%.1f", PressureSingleton.getInstance().getPressure()) + " KPa");
 
         //returner inflater.inflate(R.layout.fragment_battery, container, false);
         return view1;

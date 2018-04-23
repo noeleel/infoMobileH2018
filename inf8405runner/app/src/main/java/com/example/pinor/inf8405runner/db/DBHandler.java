@@ -130,7 +130,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 Result result = new Result();
                 result.set_id(cursor.getInt(0));
                 result.set_time(cursor.getInt(1));
-                result.set_distance(cursor.getInt(2));
+                result.set_distance(cursor.getFloat(2));
 
                 resultsList.add(result);
             } while (cursor.moveToNext());
@@ -166,15 +166,10 @@ public class DBHandler extends SQLiteOpenHelper {
         DeviceInfo info = new DeviceInfo();
 
         if (cursor.moveToFirst()) {
-            //do {
-
             info.set_id(cursor.getInt(0));
             info.set_batteryLevel(cursor.getInt(1));
             info.set_txDepart(cursor.getInt(2));
             info.set_rxDepart(cursor.getInt(3));
-
-                //deviceInfoList.add(info);
-                //} while (cursor.moveToNext());
         }
         return info;
     }
