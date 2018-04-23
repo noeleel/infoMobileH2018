@@ -183,7 +183,7 @@ public class ChronoFragment extends Fragment implements OnMapReadyCallback,  Goo
             SumDistance +=distance;
             Log.d("Location",locationList.get(j).toString());
         }
-        return SumDistance;
+        return SumDistance/1000;
     }
 
     public void insertTimeDB() {
