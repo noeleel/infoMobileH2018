@@ -32,7 +32,7 @@ public class DrawerActivity extends AppCompatActivity
         SensorEventListener {
 
     private SensorManager sensorManager;
-    private Sensor mPressure;
+    private Sensor sensor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +69,7 @@ public class DrawerActivity extends AppCompatActivity
         ft.commit();
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        mPressure = sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE);
+        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
     }
 
 
@@ -157,7 +157,7 @@ public class DrawerActivity extends AppCompatActivity
     protected void onResume() {
         // Register a listener for the sensor.
         super.onResume();
-        sensorManager.registerListener(this, mPressure, SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     @Override
