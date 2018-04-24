@@ -78,7 +78,7 @@
             android:textStyle="bold"
             android:gravity="center"
             android:paddingBottom="20dip"
-            android:text="PRESSURE" />
+            android:text="ORIENTATION" />
 
         <TextView
             android:layout_width="match_parent"
@@ -86,7 +86,7 @@
             android:textSize="14sp"
             android:textColor="#0090ff"
             android:gravity="center"
-            android:text="Pression:" />
+            android:text="Orientation selon x:" />
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -112,7 +112,7 @@ public class ChronoFragment extends Fragment implements OnMapReadyCallback,  Goo
             return;
         }
         locationList = new ArrayList<> ();
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 0, this);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 0, this);
 
     }
 
@@ -329,7 +329,7 @@ public class ChronoFragment extends Fragment implements OnMapReadyCallback,  Goo
             Toast.makeText(this.getActivity(), Double.toString(locationList.get((locationList.size() - 1)).getLatitude()) + "  "+ Double.toString(locationList.get((locationList.size() - 1)).getLongitude()), Toast.LENGTH_LONG).show();
             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
             googlemap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-
+            Log.d("Location",location.toString());
             googlemap.animateCamera(CameraUpdateFactory.zoomBy(10));
         } catch (Exception e) {
             Log.d("Camera","Null pointer exception");

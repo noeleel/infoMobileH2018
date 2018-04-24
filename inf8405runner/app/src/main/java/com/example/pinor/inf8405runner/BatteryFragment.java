@@ -5,6 +5,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.BatteryManager;
 import android.os.Bundle;
@@ -23,7 +27,7 @@ import android.net.TrafficStats;
  * Use the {@link BatteryFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class BatteryFragment extends Fragment {
+public class BatteryFragment extends Fragment implements SensorEventListener {
 
     //declaration de variables
     TextView tvUse_bat;
@@ -51,6 +55,9 @@ public class BatteryFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private SensorManager sensorManager;
+    private Sensor sensor;
 
 
 // TODO: Rename and change types and number of parameters
@@ -91,6 +98,8 @@ public class BatteryFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        sensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
+        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
     }
 
 
@@ -215,6 +224,32 @@ public class BatteryFragment extends Fragment {
     }
 
 
+    @Override
+    public void onResume() {
+        // Register a listener for the sensor.
+        super.onResume();
+        sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    @Override
+    public void onPause() {
+        // Be sure to unregister the sensor when the activity pauses.
+        super.onPause();
+        sensorManager.unregisterListener(this);
+    }
+    @Override
+    public final void onSensorChanged(SensorEvent event) {
+        float pressure = event.values[0];
+        // Do something with this sensor data.
+        PressureSingleton.getInstance().setPressure(pressure / 10);
+    }
+
+    @Override
+    public final void onAccuracyChanged(Sensor sensor, int accuracy) {
+        // Do something here if sensor accuracy changes.
+    }
+
+
     //Affichage
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -235,7 +270,7 @@ public class BatteryFragment extends Fragment {
 
         // Affichage de la pression
         tvPression = (TextView)view1.findViewById(R.id.pression_tv);
-        tvPression.setText(String.format("%.1f", PressureSingleton.getInstance().getPressure()) + " KPa");
+        tvPression.setText(String.format("%.1f", PressureSingleton.getInstance().getPressure()) + " S.I.");
 
         //returner inflater.inflate(R.layout.fragment_battery, container, false);
         return view1;
